@@ -5,10 +5,9 @@
 % The paper is OpenAccess and you can download freely from "http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=8265186."
 % The code was written by Tao Lei and Xiaohong Jia in 2018.
 
-function Lseg=main(img_path)
+function Lseg=main(f_ori)
 %% 
 cluster=2;
-f_ori=imread(img_path);
 % Note that you can repeat the program for several times to obtain the best
 % segmentation result for image '12003.jpg'
 %% generate superpixels
@@ -18,6 +17,7 @@ SE=3;
 L1=w_MMGR_WT(f_ori,SE);
 L2=imdilate(L1,strel('square',2));
 [~,~,Num,centerLab]=Label_image(f_ori,L2);
+
 %% fast FCM
 Label=w_super_fcm(L2,centerLab,Num,cluster);
 Lseg=Label_image(f_ori,Label);
