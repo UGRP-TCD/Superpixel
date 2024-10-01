@@ -246,6 +246,46 @@ double** initialize_centers(double*** img, int w, int h, int depth, int* num_clu
 
     return centers;
 }
+// double** initialize_centers(double*** img, int w, int h, int depth, int* num_clusters, int* grid_s, int m) {
+//     int grid_size = sqrt((double)(h * w) / (double)(m));
+//     if (grid_size < 1) {
+//         grid_size = 1;
+//     }
+
+//     *grid_s = grid_size;
+
+//     int x_ = w / grid_size;
+//     int y_ = h / grid_size;
+//     *num_clusters = x_ * y_;
+//     double** centers = create2darray_d(*num_clusters, (2 + depth), 0);
+
+//     int i = 0;
+//     int center_x = w / 2;
+//     int center_y = h / 2;
+
+//     for (int y = 0; y < (int)(h - (double)grid_size / 2.0); y += grid_size) {
+//         for (int x = 0; x < (int)(w - (double)grid_size / 2.0); x += grid_size) {
+
+//             // 중심에 가까운 좌표를 우선적으로 선택
+//             int new_x = x + (grid_size / 2);
+//             int new_y = y + (grid_size / 2);
+
+//             // 중심에서 멀수록 낮은 우선순위를 부여
+//             int weight = (abs(center_x - new_x) + abs(center_y - new_y)) / grid_size;
+
+//             if (i == 0 || weight < i) {
+//                 centers[i][0] = new_x;
+//                 centers[i][1] = new_y;
+//                 for (int z = 0; z < depth; ++z) {
+//                     centers[i][z + 2] = img[new_y][new_x][z];
+//                 }
+//                 i++;
+//             }
+//         }
+//     }
+
+//     return centers;
+// }
 
 void enforce_connectivity(int** labels, double** centers, int w, int h, int num_clusters){
     int avg_superpixel_size = h*w/num_clusters;
@@ -377,7 +417,7 @@ double* fslic(PyObject* arg, int w, int h, int depth, int m, double compactness,
     double** centers = initialize_centers(img, w, h, depth, &num_clusters, &grid_size, m);
 
     // Initialize labels
-    int num_of_possible_clusters = 8;
+    int num_of_possible_clusters = 4;
     int*** G = create3darray(h, w, num_of_possible_clusters, -1);
     double*** D = create3darray_d(h, w, num_of_possible_clusters, DBL_MAX);
 
